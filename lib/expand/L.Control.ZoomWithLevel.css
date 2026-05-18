@@ -1,0 +1,119 @@
+/* ============================================================================
+ * Leaflet 自定义缩放控件样式 - 带层级显示
+ * 文件：L.Control.ZoomWithLevel.css
+ * 功能：为缩放控件提供样式定义（放大按钮/层级数字/缩小按钮）
+ * ========================================================================== */
+
+/* 控件容器样式
+ * 最外层 div，包含放大按钮、层级数字、缩小按钮三个部分
+ */
+.leaflet-control-zoom-with-level {
+    /* 使用 Flexbox 布局 */
+    display: flex;
+    /* 子元素垂直排列（从上到下：放大、层级、缩小） */
+    flex-direction: column;
+    /* 子元素横向拉伸填满容器 */
+    align-items: stretch;
+    /* 背景颜色：白色 */
+    background: #fff;
+    /* 圆角：4px（四角圆角） */
+    border-radius: 4px;
+    /* 阴影效果：增强立体感 */
+    box-shadow: 0 1px 5px rgba(0,0,0,0.65);
+}
+
+/* 按钮通用样式
+ * 适用于放大按钮和缩小按钮（<a> 标签）
+ */
+.leaflet-control-zoom-with-level a {
+    /* 背景颜色：白色 */
+    background: #fff;
+    /* 文字颜色：黑色 */
+    color: black;
+    /* 宽度：26px（与 Leaflet 官方控件一致） */
+    width: 26px;
+    /* 高度：26px */
+    height: 26px;
+    /* 行高：26px（使文字垂直居中） */
+    line-height: 26px;
+    /* 文字水平居中 */
+    text-align: center;
+    /* 去掉下划线（链接默认样式） */
+    text-decoration: none;
+    /* 字体加粗 */
+    font-weight: bold;
+    /* 字体大小：22px（符号大小） */
+    font-size: 22px;
+    /* 鼠标样式：手型（表示可点击） */
+    cursor: pointer;
+    /* 底部边框：灰色分隔线 */
+    border-bottom: 1px solid #ccc;
+}
+
+/* 按钮悬停状态
+ * 鼠标移动到按钮上时的样式
+ */
+.leaflet-control-zoom-with-level a:hover {
+    /* 背景颜色：浅灰色（提供视觉反馈） */
+    background: #f4f4f4;
+}
+
+/* 放大按钮样式
+ * 顶部按钮，需要设置顶部圆角
+ */
+.leaflet-control-zoom-with-level-in {
+    /* 圆角：仅顶部两角为 4px，底部两角为 0 */
+    border-radius: 4px 4px 0 0;
+}
+
+/* 缩放层级数字显示区域样式
+ * 位于放大和缩小按钮中间的 div
+ */
+.leaflet-control-zoom-with-level-level {
+    /* 背景颜色：白色（与按钮一致） */
+    background: #fff;
+    /* 顶部边框：灰色分隔线（与放大按钮分隔） */
+    border-top: 1px solid #ccc;   
+    /* 上下内边距：3px（控制数字区域高度） */
+    padding: 3px 0;
+    /* 字体大小：16px（层级数字大小） */
+    font-size: 16px;
+    /* 字体加粗 */
+    font-weight: bold;
+    /* 文字颜色：黑色 */
+    color: black;
+    /* 行高：1.2 倍字体大小 */
+    line-height: 1.2;
+    /* 文字水平居中 */
+    text-align: center;
+    /* 使用 Flexbox 布局实现垂直居中 */
+    display: flex;
+    /* Flex 子元素垂直居中对齐 */
+    align-items: center;
+    /* Flex 子元素水平居中对齐 */
+    justify-content: center;
+    /* 最小高度：20px（确保数字区域不会太矮） */
+    min-height: 20px;
+}
+
+/* 缩小按钮样式
+ * 底部按钮，需要设置底部圆角，并去掉底部边框
+ */
+.leaflet-control-zoom-with-level-out {
+    /* 圆角：仅底部两角为 4px，顶部两角为 0 */
+    border-radius: 0 0 4px 4px;
+    /* 去掉底部边框（容器已有圆角阴影） */
+    border-bottom: none;
+}
+
+/* 触摸设备适配样式
+ * 针对触摸设备（手机、平板）优化按钮尺寸
+ */
+.leaflet-touch .leaflet-control-zoom-with-level a {
+    /* 宽度增加到 30px（更容易点击） */
+    width: 30px;
+    /* 高度增加到 30px */
+    height: 30px;
+    /* 行高增加到 30px（保持垂直居中） */
+    line-height: 30px;
+}

@@ -15,8 +15,8 @@
             zoomControl: false
         });
 
-        L.control.zoom({
-            position: 'topright'
+        L.control.zoomWithLevel({
+            position: 'topleft'
         }).addTo(map);
 
         L.control.scale({

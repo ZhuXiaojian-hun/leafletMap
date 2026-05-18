@@ -12,6 +12,7 @@
 - 🔄 **图层切换** - 底图图层和叠加图层独立管理，可自由组合
 - 📍 **标记功能** - 支持添加标记点和弹窗
 - 📏 **比例尺** - 实时显示地图比例尺
+- 🎛️ **缩放控制** - 左侧缩放按钮集成当前层级显示，支持快捷缩放
 - 📱 **响应式设计** - 支持桌面端和移动端
 - 🚀 **零配置** - 无需构建，直接浏览器打开即可使用
 
@@ -50,7 +51,9 @@ leafletMap/
 │   └── map.js              # 地图初始化与 API
 └── lib/
     ├── leaflet/            # Leaflet 1.9.4 核心库
-    └── expand/             # 扩展插件（天地图、高德等）
+    └── expand/             # 扩展插件
+        ├── leaflet.ChineseTmsProviders.js  # 中国地图 providers
+        └── L.Control.ZoomWithLevel.js      # 自定义缩放层级控制插件
 ```
 
 ## 配置说明
@@ -114,6 +117,33 @@ MapApp.setView(28.0, 113.0, 10);
 MapApp.fitBounds([[28, 113], [29, 114]]);
 ```
 
+## 自定义控件
+
+### 缩放层级控制 (ZoomWithLevel)
+
+集成在地图左侧的缩放控件，显示当前地图层级：
+
+- **位置**：左上角 (topleft)
+- **结构**：放大按钮 (+) / 层级数字 / 缩小按钮 (-) 垂直排列
+- **功能**：
+  - 点击 `+` 放大地图（Shift+ 点击放大 3 级）
+  - 点击 `-` 缩小地图（Shift+ 点击缩小 3 级）
+  - 中间实时显示当前缩放级别（0-20）
+
+**文件位置**：
+- JS: `lib/expand/L.Control.ZoomWithLevel.js`
+- CSS: `lib/expand/L.Control.ZoomWithLevel.css`
+
+**样式自定义**：
+编辑 `L.Control.ZoomWithLevel.css` 可调整：
+- `.leaflet-control-zoom-with-level-level` - 层级数字样式（字体大小、颜色、背景等）
+- `.leaflet-control-zoom-with-level a` - 缩放按钮样式（大小、边框等）
+
+**符号修改**：
+编辑 `L.Control.ZoomWithLevel.js` 的 `options` 配置：
+- `zoomInText`: 放大按钮符号（默认 `'+'`）
+- `zoomOutText`: 缩小按钮符号（默认 `'-'`）
+
 ## 支持的地图源
 
 ### 底图
@@ -158,6 +188,8 @@ leafletMap/
 3. **HTTPS 建议**：外部瓦片服务优先使用 HTTPS，避免混合内容警告
 4. **API 密钥**：天地图服务需要在配置中添加 API 密钥
 5. **跨域问题**：本地离线地图建议使用本地服务器访问
+6. **控件位置**：缩放控件默认位于左上角，可通过修改 `options.position` 调整
+7. **本地服务器**：推荐使用 `python -m http.server 8080` 访问，避免 file:// 协议的安全限制
 
 ## 浏览器支持
 
@@ -170,6 +202,7 @@ leafletMap/
 
 - [Leaflet 1.9.4](https://leafletjs.com/) - 地图核心库
 - [leaflet.ChineseTmsProviders](https://github.com/Leaflet/Leaflet.ChineseTmsProviders) - 中国地图 providers 插件
+- L.Control.ZoomWithLevel - 自定义缩放层级控制控件
 
 ## 许可证
 
