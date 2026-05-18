@@ -3,6 +3,7 @@ const MapConfig = {
     zoom: 3,
     minZoom: 2,
     maxZoom: 20,
+    attributionControl: false, // 是否显示地图版权信息
     
     baseLayers: [
         {

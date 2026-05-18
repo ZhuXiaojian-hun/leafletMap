@@ -9,11 +9,79 @@
     
     <link rel="stylesheet" href="./lib/leaflet/leaflet.css">
     <link rel="stylesheet" href="./lib/expand/L.Control.ZoomWithLevel.css">
+    <link rel="stylesheet" href="./lib/expand/leaflet.fullscreen.css">
+    <link rel="stylesheet" href="./lib/expand/leaflet.locate.css">
+    <link rel="stylesheet" href="./lib/expand/leaflet.mouseposition.css">
+    <link rel="stylesheet" href="./lib/expand/leaflet.draw.css">
     <link rel="stylesheet" href="./css/style.css">
+    
+    <style>
+    /* 强制修复全屏按钮样式 */
+    .leaflet-control-fullscreen,
+    .leaflet-control-fullscreen a,
+    .leaflet-control-fullscreen .fullscreen-icon,
+    .leaflet-fullscreen-icon,
+    a.leaflet-fullscreen-on,
+    .leaflet-control-zoom-fullscreen {
+        background-color: #fff !important;
+    }
+    
+    .leaflet-control-fullscreen a {
+        width: 30px !important;
+        height: 30px !important;
+        line-height: 30px !important;
+        text-align: center !important;
+        display: block !important;
+        position: relative !important;
+        padding: 0 !important;
+    }
+    
+    .leaflet-control-fullscreen .fullscreen-icon,
+    .leaflet-fullscreen-icon,
+    .leaflet-control-zoom-fullscreen.fullscreen-icon,
+    a.fullscreen-icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z'/%3E%3C/svg%3E") !important;
+        background-size: 20px 20px !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+        width: 26px !important;
+        height: 26px !important;
+        display: inline-block !important;
+        margin: 2px !important;
+        position: relative !important;
+        vertical-align: middle !important;
+    }
+    
+    .leaflet-control-fullscreen .fullscreen-icon.leaflet-fullscreen-on,
+    .leaflet-fullscreen-icon.leaflet-fullscreen-on,
+    .leaflet-control-zoom-fullscreen.fullscreen-icon.leaflet-fullscreen-on,
+    a.leaflet-fullscreen-on.fullscreen-icon {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z'/%3E%3C/svg%3E") !important;
+    }
+    
+    /* 触摸设备适配 */
+    .leaflet-touch .leaflet-control-fullscreen a {
+        width: 36px !important;
+        height: 36px !important;
+        line-height: 36px !important;
+    }
+    
+    .leaflet-touch .leaflet-control-fullscreen .fullscreen-icon,
+    .leaflet-touch .leaflet-fullscreen-icon {
+        background-size: 24px 24px !important;
+        width: 30px !important;
+        height: 30px !important;
+        margin: 3px !important;
+    }
+    </style>
     
     <script src="./lib/leaflet/leaflet.js"></script>
     <script src="./lib/expand/leaflet.ChineseTmsProviders.js"></script>
     <script src="./lib/expand/L.Control.ZoomWithLevel.js"></script>
+    <script src="./lib/expand/leaflet.fullscreen.js"></script>
+    <script src="./lib/expand/leaflet.locate.js"></script>
+    <script src="./lib/expand/leaflet.mouseposition.js"></script>
+    <script src="./lib/expand/leaflet.draw.js"></script>
     <script src="./js/config.js"></script>
     <script src="./js/map.js"></script>
 </head>

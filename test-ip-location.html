@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>IP 定位测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+        }
+        h1 { color: #333; }
+        .test-section {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .test-section h3 {
+            margin-top: 0;
+            color: #666;
+        }
+        .result {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .warning { background: #fff3cd; color: #856404; }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .location-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .info-item {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 3px;
+        }
+        .info-item label {
+            font-weight: bold;
+            color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        table th, table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        table th {
+            background: #f2f2f2;
+            font-weight: bold;
+        }
+        .china-check {
+            color: #28a745;
+            font-weight: bold;
+        }
+        .china-check.fail {
+            color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌍 IP 定位测试工具</h1>
+    
+    <div class="test-section">
+        <h3>测试说明</h3>
+        <p>本工具会测试多个 IP 定位 API，返回您的位置信息。请点击"开始测试"按钮。</p>
+        <button onclick="testAllAPIs()">开始测试</button>
+        <button onclick="clearResults()">清空结果</button>
+    </div>
+    
+    <div id="results"></div>
+    
+    <div class="test-section">
+        <h3>中国坐标范围验证</h3>
+        <p>纬度：<strong>18°N ~ 54°N</strong> | 经度：<strong>73°E ~ 135°E</strong></p>
+        <p>长沙参考坐标：<strong>28.2°N, 112.9°E</strong></p>
+        <p>北京参考坐标：<strong>39.9°N, 116.4°E</strong></p>
+    </div>
+
+    <script>
+        function log(message, type = 'info') {
+            const resultsDiv = document.getElementById('results');
+            const div = document.createElement('div');
+            div.className = `result ${type}`;
+            div.textContent = message;
+            resultsDiv.appendChild(div);
+            console.log(message);
+        }
+
+        function clearResults() {
+            document.getElementById('results').innerHTML = '';
+        }
+
+        function validateChinaCoordinates(lat, lng) {
+            const inChina = lat >= 18 && lat <= 54 && lng >= 73 && lng <= 135;
+            return {
+                inChina: inChina,
+                message: inChina ? '✓ 在中国境内' : '✗ 不在中国境内'
+            };
+        }
+
+        async function testAPI(apiConfig) {
+            const startTime = Date.now();
+            log(`\n正在测试 ${apiConfig.name}...`, 'info');
+            
+            try {
+                const response = await fetch(apiConfig.url);
+                const endTime = Date.now();
+                
+                if (!response.ok) {
+                    log(`${apiConfig.name}: 失败 (${response.status})`, 'error');
+                    return null;
+                }
+                
+                const data = await response.json();
+                const location = apiConfig.parse(data);
+                
+                const validation = validateChinaCoordinates(location.lat, location.lng);
+                
+                let resultHtml = `
+<div class="location-info">
+    <div class="info-item"><label>API:</label> ${apiConfig.name}</div>
+    <div class="info-item"><label>耗时:</label> ${endTime - startTime}ms</div>
+    <div class="info-item"><label>城市:</label> ${location.city || 'N/A'}</div>
+    <div class="info-item"><label>省份:</label> ${location.region || 'N/A'}</div>
+    <div class="info-item"><label>国家:</label> ${location.country || 'N/A'}</div>
+    <div class="info-item"><label>纬度:</label> ${location.lat}</div>
+    <div class="info-item"><label>经度:</label> ${location.lng}</div>
+    <div class="info-item"><label>验证:</label> <span class="${validation.inChina ? 'china-check' : 'china-check fail'}">${validation.message}</span></div>
+</div>`;
+                
+                log(resultHtml, 'success');
+                
+                return {
+                    name: apiConfig.name,
+                    location: location,
+                    inChina: validation.inChina,
+                    responseTime: endTime - startTime
+                };
+                
+            } catch (error) {
+                log(`${apiConfig.name}: 错误 - ${error.message}`, 'error');
+                return null;
+            }
+        }
+
+        async function testAllAPIs() {
+            clearResults();
+            log('开始测试所有 IP 定位 API...\n', 'info');
+            
+            const apis = [
+                { 
+                    url: 'https://ipwho.is/', 
+                    name: 'ipwho.is (推荐)',
+                    parse: function(data) {
+                        return {
+                            lat: data.latitude,
+                            lng: data.longitude,
+                            city: data.city,
+                            region: data.region,
+                            country: data.country
+                        };
+                    }
+                },
+                { 
+                    url: 'https://ipapi.co/json/', 
+                    name: 'ipapi.co',
+                    parse: function(data) {
+                        return {
+                            lat: data.latitude,
+                            lng: data.longitude,
+                            city: data.city,
+                            region: data.region,
+                            country: data.country_name
+                        };
+                    }
+                },
+                { 
+                    url: 'http://ip-api.com/json/', 
+                    name: 'ip-api.com',
+                    parse: function(data) {
+                        return {
+                            lat: data.lat,
+                            lng: data.lon,
+                            city: data.city,
+                            region: data.regionName,
+                            country: data.country
+                        };
+                    }
+                }
+            ];
+            
+            const results = [];
+            
+            for (const api of apis) {
+                const result = await testAPI(api);
+                if (result) {
+                    results.push(result);
+                }
+                // 等待 500ms 再测试下一个 API
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+            
+            // 显示汇总结果
+            if (results.length > 0) {
+                log('\n=== 测试汇总 ===\n', 'info');
+                
+                let tableHtml = `
+<table>
+    <thead>
+        <tr>
+            <th>API</th>
+            <th>城市</th>
+            <th>纬度</th>
+            <th>经度</th>
+            <th>在中国</th>
+            <th>耗时</th>
+        </tr>
+    </thead>
+    <tbody>`;
+                
+                results.forEach(r => {
+                    tableHtml += `
+<tr>
+    <td>${r.name}</td>
+    <td>${r.location.city || 'N/A'}</td>
+    <td>${r.location.lat}</td>
+    <td>${r.location.lng}</td>
+    <td>${r.inChina ? '✓' : '✗'}</td>
+    <td>${r.responseTime}ms</td>
+</tr>`;
+                });
+                
+                tableHtml += '</tbody></table>';
+                log(tableHtml, 'success');
+                
+                // 推荐最佳 API
+                const chinaAPIs = results.filter(r => r.inChina);
+                if (chinaAPIs.length > 0) {
+                    const best = chinaAPIs.reduce((prev, curr) => 
+                        prev.responseTime < curr.responseTime ? prev : curr
+                    );
+                    log(`\n✅ 推荐使用：${best.name}（在中国境内且响应最快）`, 'success');
+                    log(`位置：${best.location.city || best.location.region}, ${best.location.lat}, ${best.location.lng}`, 'success');
+                } else {
+                    log('\n️ 所有 API 返回的坐标都不在中国境内，请检查网络环境', 'warning');
+                }
+            }
+        }
+
+        // 页面加载后自动测试
+        window.onload = function() {
+            log('页面加载完成，请点击"开始测试"按钮', 'info');
+        };
+    </script>
+</body>
+</html>

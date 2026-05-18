@@ -1,0 +1,86 @@
+/**
+ * Leaflet.Fullscreen CSS - 全屏控件样式
+ * 修复图标显示问题，使用内联 SVG 避免路径问题
+ */
+
+/* 全屏控件按钮容器 */
+.leaflet-control-fullscreen a {
+    background-color: #fff;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+}
+
+/* 全屏按钮图标 - 使用内联 SVG data URI */
+.leaflet-control-fullscreen .fullscreen-icon,
+.leaflet-fullscreen-icon,
+.leaflet-control-fullscreen a .fullscreen-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z'/%3E%3C/svg%3E") !important;
+    background-size: 24px 24px !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    width: 24px !important;
+    height: 24px !important;
+    display: inline-block !important;
+    vertical-align: middle;
+    margin: 3px;
+}
+
+/* 全屏状态图标 - 收缩图标 */
+.leaflet-control-fullscreen .fullscreen-icon.leaflet-fullscreen-on,
+.leaflet-fullscreen-icon.leaflet-fullscreen-on,
+.leaflet-control-fullscreen-on .fullscreen-icon,
+.leaflet-control-fullscreen a.leaflet-fullscreen-on .fullscreen-icon {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23000' d='M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z'/%3E%3C/svg%3E") !important;
+}
+
+/* 触摸设备适配 */
+.leaflet-touch .leaflet-control-fullscreen a {
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+}
+
+.leaflet-touch .leaflet-control-fullscreen .fullscreen-icon,
+.leaflet-touch .leaflet-fullscreen-icon,
+.leaflet-touch .leaflet-control-fullscreen a .fullscreen-icon {
+    background-size: 28px 28px !important;
+    width: 28px !important;
+    height: 28px !important;
+    margin: 4px;
+}
+
+/* 全屏状态下地图容器样式 */
+.leaflet-container:-webkit-full-screen {
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 99999;
+}
+
+.leaflet-container:-ms-fullscreen {
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 99999;
+}
+
+.leaflet-container:fullscreen {
+    width: 100% !important;
+    height: 100% !important;
+    z-index: 99999;
+}
+
+/* 伪全屏模式（兼容不支持原生全屏的浏览器） */
+.leaflet-pseudo-fullscreen {
+    position: fixed !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    z-index: 99999 !important;
+}
+
+/* 确保全屏控件 z-index 正确 */
+.leaflet-control-fullscreen {
+    z-index: 1000 !important;
+}
