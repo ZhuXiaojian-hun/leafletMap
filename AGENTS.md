@@ -1,62 +1,66 @@
 # AGENTS.md - Leaflet Map Project
 
 ## Project Overview
-Static Leaflet-based web map application. No build system, no dependencies to install.
+Pure frontend Leaflet map application. No build system, no npm/node dependencies.
 
 ## Quick Start
 ```bash
-# Open directly in browser or serve via any static server
-# Example: python -m http.server 8080
-# Then visit: http://localhost:8080
+# Open index.html directly in browser, or serve via:
+python -m http.server 8080
+# Visit: http://localhost:8080
 ```
 
-## File Structure
-```
-leafletMap/
-├── index.html          # Entry point
-├── js/
-│   ├── config.js       # Map layer configurations (edit here to add/change layers)
-│   └── map.js          # Map initialization logic
-├── css/
-│   └── style.css       # Custom styles
-└── lib/
-    ├── leaflet/        # Leaflet 1.9.4 core library
-    └── expand/         # Chinese tile providers plugin
-```
+## Architecture
+- **Entry**: `index.html` loads scripts in order: leaflet → expand → config → map
+- **Config**: `js/config.js` - MapConfig object with layers array
+- **Logic**: `js/map.js` - IIFE, auto-initializes on DOMContentLoaded, exposes `MapApp` API
+- **No state management** - all config is static in config.js
 
 ## Key Commands
-- **No npm/node required** - pure static files
-- **No build step** - edit files and refresh browser
-- **Test**: Open `index.html` in browser, verify layers load
+- No build/lint/test commands - edit files and refresh browser
+- Verify: Open browser, check layers load, switch between base maps
 
-## Adding New Layers
-Edit `js/config.js`:
-- Add to `baseLayers[]` for base map options (radio buttons)
-- Add to `overlayLayers[]` for toggleable overlays (checkboxes)
+## Adding Layers (Critical)
 
-## Map API
+**Simple base layer:**
 ```javascript
-MapApp.getMap()           // Get Leaflet map instance
-MapApp.addMarker(lat, lng)
+{ name: "Name", type: "UniqueType", url: "...", subdomains: ["1","2"], maxZoom: 18 }
+```
+
+**Composite layer (e.g., satellite + annotation):**
+```javascript
+{
+    name: "高德卫星",
+    layers: [
+        { url: "...", isOverlay: false },  // Main layer
+        { url: "...", isOverlay: true }    // Overlay layer
+    ]
+}
+```
+
+**Set default base map:** Add `default: true` to one baseLayer config
+
+**Overlay layers:** Add to `overlayLayers[]` array (checkboxes in UI)
+
+## MapApp API
+```javascript
+MapApp.getMap()                  // Returns Leaflet map instance
+MapApp.addMarker(lat, lng, opts) // Returns marker
+MapApp.addPopup(marker, content) // Binds popup to marker
 MapApp.setView(lat, lng, zoom)
-MapApp.fitBounds(bounds)
+MapApp.fitBounds([[lat,lng],[lat,lng]])
 ```
 
 ## Gotchas
-- Tile layer URLs must use `{z}/{x}/{y}` or `{z}/{y}/{x}` format
-- Subdomains must match the tile server's requirements
-- Local tile layers: use `./maps/` relative path
-- External tiles: prefer HTTPS to avoid mixed-content warnings
-- TianDiTu layers require API key in config
+- Tile URLs: `{z}/{x}/{y}` or `{z}/{y}/{x}` - must match server format
+- Subdomains: Array `["1","2"]` or string `"abc"` - must match tile server
+- Local tiles: Use `./maps/` relative path
+- External tiles: Use HTTPS to avoid mixed-content warnings
+- TianDiTu: Requires `key` field in config (currently: `174705aebfe31b79b3587279e211cb9a`)
+- **Do not use npm/node** - this is a static site
 
-## Tile Layer Config Format
-```javascript
-{
-    name: "Display Name",
-    type: "UniqueType",
-    url: "https://tile-server/{z}/{x}/{y}.png",
-    subdomains: ["1", "2", "3"],  // or "abc"
-    maxZoom: 18,
-    key: "api-key-if-needed"
-}
-```
+## File Boundaries
+- `js/config.js` - Edit here for layer changes
+- `js/map.js` - Edit here for logic/API changes
+- `css/style.css` - Custom styles only
+- `lib/` - Third-party libraries (do not modify)
