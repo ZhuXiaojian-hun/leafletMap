@@ -1,0 +1,48 @@
+# Binaries
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.bat
+*.txt
+
+AGENTS.md
+test-fullscreen.html
+test-ip-location.html
+定位修复说明.md
+UPDATE_NOTES.md
+
+
+# Test binary
+*.test
+
+# Output of go coverage
+*.out
+
+# Go workspace
+go.work
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Data directory
+data/
+testData/
+testDATA/
+test/
+session/
+
+# Temp files
+_temp/
+
+# Node
+node_modules/
+web/dist/
+
+# OS
+.DS_Store
+Thumbs.db
