@@ -64,3 +64,8 @@ MapApp.fitBounds([[lat,lng],[lat,lng]])
 - `js/map.js` - Edit here for logic/API changes
 - `css/style.css` - Custom styles only
 - `lib/` - Third-party libraries (do not modify)
+
+## 优先使用官网在线插件实现功能需求
+
+- leaflet 插件地址：[Plugins - Leaflet - 一个交互式地图 JavaScript 库](https://leafletjs.cn/plugins.html)
+- 
