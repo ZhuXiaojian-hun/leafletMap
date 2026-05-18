@@ -26,12 +26,12 @@
             maxWidth: 200
         }).addTo(map);
 
+        createLayers();
+
         L.control.layers(baseMaps, overlayMaps, {
             position: 'topright',
             collapsed: true
         }).addTo(map);
-
-        createLayers();
     }
 
     function createLayers() {
